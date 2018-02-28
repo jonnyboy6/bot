@@ -1,122 +1,195 @@
-var settings = {
-    'above': {'min': 5, 'max': 10},
-    'below': {'min': 5, 'max': 10},
-    'overlay': {'min': 0, 'max': 1}
-};
+const zalgo_up = [
 
-function getRandIntBetween(min, max) {
-    return Math.floor(Math.random()*(max-min+1))+min;
+    '\u030d', /*          */ '\u030e', /*          */ '\u0304', /*          */ '\u0305', /*          */
+
+    '\u033f', /*          */ '\u0311', /*          */ '\u0306', /*          */ '\u0310', /*          */
+
+    '\u0352', /*          */ '\u0357', /*          */ '\u0351', /*          */ '\u0307', /*          */
+
+    '\u0308', /*          */ '\u030a', /*          */ '\u0342', /*          */ '\u0343', /*          */
+
+    '\u0344', /*          */ '\u034a', /*          */ '\u034b', /*          */ '\u034c', /*          */
+
+    '\u0303', /*          */ '\u0302', /*          */ '\u030c', /*          */ '\u0350', /*          */
+
+    '\u0300', /*          */ '\u0301', /*          */ '\u030b', /*          */ '\u030f', /*          */
+
+    '\u0312', /*          */ '\u0313', /*          */ '\u0314', /*          */ '\u033d', /*          */
+
+    '\u0309', /*          */ '\u0363', /*          */ '\u0364', /*          */ '\u0365', /*          */
+
+    '\u0366', /*          */ '\u0367', /*          */ '\u0368', /*          */ '\u0369', /*          */
+
+    '\u036a', /*          */ '\u036b', /*          */ '\u036c', /*          */ '\u036d', /*          */
+
+    '\u036e', /*          */ '\u036f', /*          */ '\u033e', /*          */ '\u035b', /*          */
+
+    '\u0346', /*          */ '\u031a' /*          */
+
+];
+const zalgo_down = [
+
+    '\u0316', /*          */ '\u0317', /*          */ '\u0318', /*          */ '\u0319', /*          */
+
+    '\u031c', /*          */ '\u031d', /*          */ '\u031e', /*          */ '\u031f', /*          */
+
+    '\u0320', /*          */ '\u0324', /*          */ '\u0325', /*          */ '\u0326', /*          */
+
+    '\u0329', /*          */ '\u032a', /*          */ '\u032b', /*          */ '\u032c', /*          */
+
+    '\u032d', /*          */ '\u032e', /*          */ '\u032f', /*          */ '\u0330', /*          */
+
+    '\u0331', /*          */ '\u0332', /*          */ '\u0333', /*          */ '\u0339', /*          */
+
+    '\u033a', /*          */ '\u033b', /*          */ '\u033c', /*          */ '\u0345', /*          */
+
+    '\u0347', /*          */ '\u0348', /*          */ '\u0349', /*          */ '\u034d', /*          */
+
+    '\u034e', /*          */ '\u0353', /*          */ '\u0354', /*          */ '\u0355', /*          */
+
+    '\u0356', /*          */ '\u0359', /*          */ '\u035a', /*          */ '\u0323' /*          */
+
+];
+const zalgo_mid = [
+
+    '\u0315', /*          */ '\u031b', /*          */ '\u0340', /*          */ '\u0341', /*          */
+
+    '\u0358', /*          */ '\u0321', /*          */ '\u0322', /*          */ '\u0327', /*          */
+
+    '\u0328', /*          */ '\u0334', /*          */ '\u0335', /*          */ '\u0336', /*          */
+
+    '\u034f', /*          */ '\u035c', /*          */ '\u035d', /*          */ '\u035e', /*          */
+
+    '\u035f', /*          */ '\u0360', /*          */ '\u0362', /*          */ '\u0338', /*          */
+
+    '\u0337', /*          */ '\u0361', /*          */ '\u0489' /*           */
+
+];
+
+function rand(max) {
+
+    return Math.floor(Math.random() * max);
+
 }
 
-function generateRandomZalgo (originalTxt, marksTable, generateSettings, generateHtmlTF) {
 
-    var convertedTxt = "";
-    var convertedHtml = "";
 
-    for (var c = 0; c < originalTxt.length; c++) {
-        convertedTxt += originalTxt.charAt(c);
-
-        if (generateHtmlTF) {
-            convertedHtml += originalTxt.charAt(c);
-        }
-
-        if (originalTxt.charAt(c) != " ") {
-            for (var gSettingsType in generateSettings) {
-                var randWithinSettings = getRandIntBetween(generateSettings[gSettingsType]['min'], generateSettings[gSettingsType]['max']);
-                var markTypeLength = zalgoMarks[gSettingsType].length;
-
-                for (var c2=0; c2 < randWithinSettings; c2++){
-                    var markToInclude = marksTable[gSettingsType][getRandIntBetween(0,markTypeLength-1)];
-                    convertedTxt += markToInclude;
-
-                    if (generateHtmlTF) {
-                        convertedHtml += zalgoMarksHtml[markToInclude];
-                    }
-
-                }
-
-            }
-        }
-    }
-
-    return new Array(convertedTxt, convertedHtml);
+//gets a random char from a zalgo char table
+function rand_zalgo(array) {
+    var ind = Math.floor(Math.random() * array.length);
+    return array[ind];
 }
 
-function setZalgo() {
-    zalgoConverted = generateRandomZalgo($("#originaltext").val(), zalgoMarks, settings, viewingHtml);
-    //alert();
-    if ($("#textfor").val() == "facebook") {
-        if (zalgoConverted[0] != "") {
-            $("#zalgotext").val(".\r\n.\r\n"+zalgoConverted[0]+"\r\n.\r\n.");
-            $("#zalgotext").css("line-height", "1.1em");
-        } else {
-            $("#zalgotext").val("");
-        }
-    }
-    else {
-        $("#zalgotext").val(zalgoConverted[0]);
-        $("#zalgotext").css("line-height", "5em");
-    }
+function is_zalgo_char(c)
 
-    if (zalgoConverted[0] != "") {
-        $("#generatezalgosubmit").val("Re-generate Zalgo Text");
-    }
+{
 
-    if (viewingHtml) {
-        $("#zalgohtml").val(zalgoConverted[1]);
-    }
+    var i;
+
+    for (i = 0; i < zalgo_up.length; i++)
+
+        if (c == zalgo_up[i])
+
+            return true;
+
+    for (i = 0; i < zalgo_down.length; i++)
+
+        if (c == zalgo_down[i])
+
+            return true;
+
+    for (i = 0; i < zalgo_mid.length; i++)
+
+        if (c == zalgo_mid[i])
+
+            return true;
+
+    return false;
+
 }
+module.exports = function(input, cb) {
+    var txt = input;
 
-var viewingHtml = false;
+    var newtxt = '';
 
-$(document).ready(function() {
-    $("#originaltext").focus();
-    $("#originaltext").keyup(function() {
-        setZalgo();
-    });
 
-    textClicksAfterFocus=0;
-    $("textarea#zalgotext").mouseup(function(event) {
-        if (textClicksAfterFocus==0) {
-            event.preventDefault();
-        }
-        textClicksAfterFocus++;
-    }).focus(function() {
-        $(this).select();
-        textClicksAfterFocus=0;
-    });
 
-    htmlClicksAfterFocus=0;
-    $("textarea#zalgohtml").mouseup(function(event) {
-        if (htmlClicksAfterFocus==0) {
-            event.preventDefault();
-        }
-        htmlClicksAfterFocus++;
-    }).focus(function() {
-        $(this).select();
-        htmlClicksAfterFocus=0;
-    });
+    for (var i = 0; i < txt.length; i++) {
 
-    $("#textfor").change(function() {
-        setZalgo();
-    });
+        if (is_zalgo_char(txt.substr(i, 1)))
 
-    $("input#generatezalgosubmit").click(function(e) {
-        setZalgo();
-        e.preventDefault();
-    });
+            continue;
 
-    $("input#viewhtml").click(function(e) {
-        $("input#viewhtml").hide();
-        $("div#zalgohtmlc").show();
-        viewingHtml = true;
-        setZalgo();
-        e.preventDefault();
-    });
 
-    $("form").submit(function(e) {
-        setZalgo();
-        //alert("s");
-        e.preventDefault();
-    });
-});
+
+        var num_up;
+
+        var num_mid;
+
+        var num_down;
+
+
+
+        //add the normal character
+
+        newtxt += txt.substr(i, 1);
+
+
+
+        //options
+
+        if (false)
+
+        {
+
+            num_up = rand(8);
+
+            num_mid = rand(2);
+
+            num_down = rand(8);
+
+        } else if (false)
+
+        {
+
+            num_up = rand(16) / 2 + 1;
+
+            num_mid = rand(6) / 2;
+
+            num_down = rand(16) / 2 + 1;
+
+        } else //maxi
+
+        {
+
+            num_up = rand(64) / 4 + 3;
+
+            num_mid = rand(16) / 4 + 1;
+
+            num_down = rand(64) / 4 + 3;
+	}
+
+
+
+
+        if (true)
+
+            for (var j = 0; j < num_up; j++)
+
+                newtxt += rand_zalgo(zalgo_up);
+
+        if (true)
+
+            for (var j = 0; j < num_mid; j++)
+
+                newtxt += rand_zalgo(zalgo_mid);
+
+        if (true)
+
+            for (var j = 0; j < num_down; j++)
+
+                newtxt += rand_zalgo(zalgo_down);
+       
+    } //end for
+ return newtxt;
+}
