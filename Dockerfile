@@ -1,6 +1,6 @@
 FROM hypriot/rpi-node:latest 
 
-ADD ././
+ADD ./ ./
 RUN npm install
 
 CMD node index.js
