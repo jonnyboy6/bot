@@ -4,13 +4,22 @@ const getNotMusk = require("./getPic.js");
 const client = new Discord.Client();
 const yoda = require("./yoda.js");
 const zalgoer = require("./zalgo.js");
-
+const readline = require("readline");
+var rl = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout
+});
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
   client.user.setPresence({game:{name:"for Pokemon",type:"WATCHING"}});
 });
 
 client.on('message', msg => {
+
+
+	rl.question("",(answer)=>{
+		msg.channel.send(answer);
+	});
 	if(msg.content.toLowerCase() == 'cool'){
 		
 		msg.reply('Beans');
@@ -57,6 +66,14 @@ client.on('message', msg => {
 		client.generateInvite().then(function(result){
 			msg.channel.send(result);
 		});
+	}
+	else if(msg.content.startsWith("-roulette")){
+		var peoples = client.users.array();
+		
+		  var Count = Math.floor(Math.random()*peoples.length);
+       var User = client.users.array()[Count];
+       msg.channel.send(User.username + " was shot. Sorry " + User.username +".");
+    
 	}
 	/*for(i = 0; i <client.user.roles.length; i ++)
 	if(msg.content.includes(client.user.roles[i])){
