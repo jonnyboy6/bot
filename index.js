@@ -31,6 +31,9 @@ client.on('message', msg => {
 			msg.channel.send(link);
 		});
 	}
+	else if(msg.content.toLowerCase().includes("shit")||msg.content.toLowerCase().includes("fuck")){
+		msg.reply("Proffesor Oak's voice echoes in your head,there is a time and place for anything but not now.");
+	}
 	else if(msg.content.startsWith("-yoda-pls")){
 		
 			yoda(msg.content.substr(9), function(err, result){
